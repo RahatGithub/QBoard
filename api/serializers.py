@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import User, Employee, Product, Order, OrderItem
 from rest_framework.exceptions import ValidationError
+from django.core.mail import send_mail
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,6 +25,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             role=validated_data.get('role', 'user')
         )
         return user
+
 
 
 
