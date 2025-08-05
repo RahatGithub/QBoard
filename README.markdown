@@ -122,10 +122,3 @@ Access the API at `http://localhost:8000`.
   }
   ```
 - **Swagger Docs**: If using `drf-yasg`, access API docs at `/swagger/` or `/redoc/`.
-
-## 📝 Notes
-
-- Set `DEBUG=False` in production for security.
-- For PostgreSQL on Render, use the provided `DATABASE_URL` environment variable.
-- Secure sensitive data (e.g., `DJANGO_SECRET_KEY`) in environment variables.
-- For Docker setup, include a `Dockerfile` and `docker-compose.yml` (optional).
