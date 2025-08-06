@@ -1,21 +1,21 @@
 # QBoard Dashboard Data Generator API
 
-A RESTful API for generating and serving realistic dashboard data (employees, users, orders, products, leaderboards, etc.) for frontend projects, prototyping, and testing. It includes authentication, filtering, analytics, customizable data generation, and more.
+A RESTful API for generating and serving realistic dashboard data (employees, users, orders, products, leaderboards, etc.) for frontend projects, prototyping, and testing.
 
 ## 🚀 Features
 
-- **CRUD Operations**: Manage Users, Employees, Products, and Orders.
-- **Random Data Generation**: Generate realistic data on-demand using Faker.
-- **Filtering, Searching, Pagination**: Available on all list endpoints.
-- **JWT Authentication**: Secure endpoints with `djangorestframework-simplejwt`.
-- **Role-based Access Control**: Supports admin, manager, and user roles.
-- **Dashboard Analytics Endpoints**: Provides summary, charts, and activity data.
-- **Bulk Create**: Efficiently create multiple Products and Orders.
-- **Stock Management**: Implements business rules for inventory.
-- **Order with Multiple Products**: Supports `OrderItem` model.
-- **Swagger/OpenAPI Docs**: Optional API documentation.
-- **CORS Support**: Enables seamless frontend integration.
-- **Docker & CI/CD Ready**: Optional setup for containerization and deployment.
+- CRUD Operations: Manage Users, Employees, Products, and Orders.
+- Random Data Generation: Generate realistic data using Faker.
+- Filtering, Searching, Pagination: Available on all list endpoints.
+- JWT Authentication: Secure endpoints with `djangorestframework-simplejwt`.
+- Role-based Access Control: Supports admin, manager, and user roles.
+- Dashboard Analytics Endpoints: Provides summary, charts, and activity data.
+- Bulk Create: Efficiently create multiple Products and Orders.
+- Stock Management: Implements business rules for inventory.
+- Order with Multiple Products: Supports `OrderItem` model.
+- Swagger/OpenAPI Docs: Optional API documentation.
+- CORS Support: Enables seamless frontend integration.
+- Docker & CI/CD Ready: Optional setup for containerization and deployment.
 
 ## 🛠️ Tech Stack
 
@@ -28,92 +28,73 @@ A RESTful API for generating and serving realistic dashboard data (employees, us
 - PostgreSQL (recommended) or SQLite (for demo)
 - Docker (optional)
 
-## ⚡ Quick Start
+## 🚦 How to Use This API in Your Frontend
 
-### 1. Clone & Setup
+### 1. Base URL
 
-Clone the repository and set up the virtual environment:
+All endpoints are available at:
 
-```bash
-git clone https://github.com/yourusername/qboard-dashboard-api.git
-cd qboard-dashboard-api
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
+```
+https://qboard.onrender.com/api/v1/
 ```
 
-### 2. Configure Database
+### 2. Authentication
 
-The project uses **SQLite** by default. To use **PostgreSQL**, update the `DATABASES` setting in `config/settings.py`:
+- **Register**:
+  - `POST /api/v1/auth/register/`
+  - Send: `{ "username": "...", "email": "...", "password": "...", "role": "user" }`
 
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'your_db_name',
-        'USER': 'your_db_user',
-        'PASSWORD': 'your_db_password',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+- **Login**:
+  - `POST /api/v1/auth/login/`
+  - Send: `{ "username": "...", "password": "..." }`
+  - Returns: `access` and `refresh` tokens.
+
+- **Use Access Token**:
+  - Add header to API calls: `Authorization: Bearer <access_token>`
+
+- **Refresh Tokens**:
+  - When access token expires, use: `POST /api/v1/auth/refresh/`
+  - Send: `{ "refresh": "<refresh_token>" }`
+  - Returns: New access token.
+
+### 3. Making Requests
+
+Example with `fetch` in JavaScript:
+
+```javascript
+fetch('https://qboard.onrender.com/api/v1/products/', {
+  headers: {
+    'Authorization': 'Bearer <access_token>',
+    'Content-Type': 'application/json'
+  }
+})
+.then(res => res.json())
+.then(data => console.log(data));
 ```
 
-### 3. Run Migrations
+For `POST`/`PUT` requests:
+- Set `Content-Type: application/json` and send data as JSON.
 
-Apply database migrations:
+### 4. CORS
 
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
+CORS is enabled, allowing API calls from any frontend domain.
 
-### 4. Create Superuser
+### 5. API Endpoints
 
-Create an admin user for the Django admin panel:
+Refer to API documentation (e.g., `/swagger/`) for all available endpoints.
 
-```bash
-python manage.py createsuperuser
-```
+### 6. Error Handling
 
-### 5. Run the Development Server
-
-Start the local development server:
-
-```bash
-python manage.py runserver
-```
-
-Access the API at `http://localhost:8000`.
-
-## 📦 Deployment on Render
-
-1. **Procfile**: Ensure a `Procfile` exists in the root with:
-   ```
-   web: gunicorn qboard_dashboard_api.wsgi:application
-   ```
-2. **Requirements**: Include dependencies in `requirements.txt` (e.g., `django`, `djangorestframework`, `djangorestframework-simplejwt`, `django-cors-headers`, `faker`, `gunicorn`, `psycopg2-binary` for PostgreSQL).
-3. **GitHub Integration**: Connect your repository to Render via GitHub.
-4. **Create Web Service**:
-   - Select your repository and branch (e.g., `main`).
-   - Configure:
-     - Environment: Python 3
-     - Build Command: `pip install -r requirements.txt`
-     - Start Command: `gunicorn qboard_dashboard_api.wsgi:application`
-   - Add environment variables (e.g., `DJANGO_SECRET_KEY`, `DATABASE_URL` for PostgreSQL).
-5. **Static Files**: For production, configure static files:
-   - Set `DEBUG=False` in `config/settings.py`.
-   - Add `STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')` in `settings.py`.
-   - Run `python manage.py collectstatic` locally or include in the build command.
-6. Deploy and monitor logs on Render.
+- **401 Error**: Token expired; refresh it or log in again.
+- **403 Error**: Insufficient permissions for the action.
 
 ## 🔧 Additional Configuration
 
-- **CORS**: Ensure `django-cors-headers` is configured in `settings.py` for frontend access:
+- **CORS**: Configured in `settings.py`:
   ```python
   CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'https://your-frontend-domain.com']
   ```
-- **JWT**: Configure `REST_FRAMEWORK` in `settings.py` for JWT authentication:
+- **JWT**: Configured in `settings.py`:
   ```python
   REST_FRAMEWORK = {
       'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -121,4 +102,10 @@ Access the API at `http://localhost:8000`.
       ]
   }
   ```
-- **Swagger Docs**: If using `drf-yasg`, access API docs at `/swagger/` or `/redoc/`.
+- **Swagger Docs**: Access at `/swagger/` or `/redoc/` if using `drf-yasg`.
+
+## 📝 Notes
+
+- Use secure tokens and HTTPS in production.
+- Secure sensitive data in environment variables.
+- Optional: Include `Dockerfile` for Docker setup.
