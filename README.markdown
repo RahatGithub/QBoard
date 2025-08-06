@@ -103,9 +103,3 @@ Refer to API documentation (e.g., `/swagger/`) for all available endpoints.
   }
   ```
 - **Swagger Docs**: Access at `/swagger/` or `/redoc/` if using `drf-yasg`.
-
-## 📝 Notes
-
-- Use secure tokens and HTTPS in production.
-- Secure sensitive data in environment variables.
-- Optional: Include `Dockerfile` for Docker setup.
