@@ -1,7 +1,17 @@
-db.sqlite3
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
-venv/
+
+# Django
+db.sqlite3
 .env
+
+# Virtualenv
+venv/
+.venv/
+
+# VSCode or PyCharm
+.vscode/
+.idea/
