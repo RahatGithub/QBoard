@@ -2,6 +2,8 @@
 
 A RESTful API for generating and serving realistic dashboard data (employees, users, orders, products, leaderboards, etc.) for frontend projects, prototyping, and testing.
 
+![QBoard Cover](static/img/Qboard.png)
+
 ## 🚀 Features
 
 - CRUD Operations: Manage Users, Employees, Products, and Orders.
